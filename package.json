@@ -1,0 +1,23 @@
+{
+  "name": "githubtopcontributors",
+  "version": "0.0.0",
+  "description": "node.js module to query the GitHub API and get the \"top 10\" contributors",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stanleyta/githubtopcontributors.git"
+  },
+  "keywords": [
+    "node",
+    "js"
+  ],
+  "author": "Stanley Ta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stanleyta/githubtopcontributors/issues"
+  },
+  "homepage": "https://github.com/stanleyta/githubtopcontributors"
+}

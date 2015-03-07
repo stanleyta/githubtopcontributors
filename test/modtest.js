@@ -1,6 +1,6 @@
 var httpMocks = require('node-mocks-http'); //no async?!
-var supertest = require('supertest');
-//var nock = require('nock');
+var nock = require('nock');
+var events = require('events');
 
 var assert = require("assert")
 var should = require('should');
@@ -13,47 +13,76 @@ app.use('/api/get', mod.get);
 
 //app = {};
 require('../server/js/logger'); //app.logger.info
-//(function() { //silence logger
-//    app.logger = {};
-//    app.logger.debug = function(){};
-//    app.logger.info = function(){};
-//    app.logger.warn = function(){};
-//    app.logger.error = function(){};
-//    app.logger.fatal= function(){};
-//}());
+(function() { //silence logger
+    app.logger = {};
+    app.logger.debug = function(){};
+    app.logger.info = function(){};
+    app.logger.warn = function(){};
+    app.logger.error = function(){};
+    app.logger.fatal= function(){};
+}());
 
+var mockObj = 42;
 
-
-var mockObj = {
-    "wassup": "yo"
-}
-//nock('https://api.github.com').get('/repos/stanleyta/githubtopcontributors/contributors').reply(200, {
-//    _id: '123ABC',
-//    _rev: '946B7D1C',
-//    username: 'pgte',
-//    email: 'pedro.teixeira@gmail.com'
-//});
+beforeEach(function(done){
+    nock.cleanAll();
+    done();
+})
 
 describe('module', function(){
     describe('get request', function(){
-        it('should default repo with no url', function(){
+        it('should default repo with no url', function(done){
+            nock('https://api.github.com').get('/repos/stanleyta/githubtopcontributors/contributors').reply(200, mockObj);
+            var request  = httpMocks.createRequest({
+                method: 'GET',
+                port: 443,
+                url: '/api/get',
+                session: {
+                    passport: {
+                        user: {
+                            accessToken: 1,
+                            profile: {
+                                username: 'sta'
+                            }
+                        }
+                    }
+                }
+            });
 
-//            supertest(app)
-//                .get('/api/get')
-//                .expect('Content-Type', /json/)
-//                .expect('Content-Length', '20')
-//                .expect(200)
-//                .end(function(err, res){
-//                    if (err) throw err;
-//                });
+            var response = httpMocks.createResponse({eventEmitter: events.EventEmitter});
+            mod.get(request, response);
+            app.logger.info("full request: " + JSON.stringify(request));
+            app.logger.info("output from _getHeaders: " + JSON.stringify(response._getHeaders()));
+            app.logger.info("output from _getStatusCode: " + response._getStatusCode());
+            app.logger.info("output from mockObj: " + JSON.stringify(mockObj));
 
+            response.on('end', function () {
+                //app.logger.info("mock end!");
+                //app.logger.info("full response: " + JSON.stringify(response));
+                //app.logger.info("full response headers: " + JSON.stringify(response._getHeaders()));
+                //app.logger.info("output from _getData: " + (response._getData());
+                assert.equal(200, response.statusCode);
+                assert.equal(response._getHeaders()["Content-Type"], "application/json");
+                response._getData().should.eql(mockObj.toString());
+                done();
+            });
+        })
+    })
+});
+
+
+describe('module', function(){
+    describe('get request', function(){
+        it('should override default repo with query string url', function(done){
+            nock('https://api.github.com').get('/repos/stanleyta/githubtopcontributors/contributors').reply(200, 1);
+            nock('https://api.github.com').get('/repos/sta/githubtopcontributors/contributors').reply(200, 2);
 
             var request  = httpMocks.createRequest({
                 method: 'GET',
                 port: 443,
                 url: '/api/get',
                 query: {
-                    url: '/repos/stanleyta/githubtopcontributors/contributors'
+                    url: '/repos/sta/githubtopcontributors/contributors'
                 },
                 session: {
                     passport: {
@@ -67,21 +96,18 @@ describe('module', function(){
                 }
             });
 
-            var response = httpMocks.createResponse();
+            var response = httpMocks.createResponse({eventEmitter: events.EventEmitter});
             mod.get(request, response);
-            var data = response._getData();
-            app.logger.info("output from _getHeaders: " + JSON.stringify(response._getHeaders()));
-            app.logger.info("output from _getData: " + response._getData());
-            app.logger.info("output from _getStatusCode: " + response._getStatusCode());
-            app.logger.info("output from data: " + data);
-            app.logger.info("output from mockObj: " + mockObj);
 
-            assert.equal(200, response.statusCode);
-            data.should.eql(42);
+            response.on('end', function () {
+                assert.equal(200, response.statusCode);
+                assert.equal(response._getHeaders()["Content-Type"], "application/json");
+                response._getData().should.eql("2");
+                done();
+            });
         })
     })
 });
-
 
 describe('simple', function(){
   describe('multiplication', function(){

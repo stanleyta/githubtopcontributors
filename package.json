@@ -46,7 +46,6 @@
     "nock": "^1.1.0",
     "node-mocks-http": "^1.2.5",
     "request": "^2.53.0",
-    "should": "^5.1.0",
-    "supertest": "^0.15.0"
+    "should": "^5.1.0"
   }
 }

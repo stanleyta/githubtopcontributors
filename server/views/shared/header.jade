@@ -1,0 +1,21 @@
+// views/shared/header.jade
+nav.navbar.navbar-inverse.navbar-fixed-top
+    .container
+        .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+                span.sr-only Toggle navigation
+                span.icon-bar
+                span.icon-bar
+                span.icon-bar
+
+        .navbar.navbar-collapse.collapse(style="border-color:transparent;margin-bottom:0px")
+
+            form.navbar-form.navbar-right(action='/login')
+                if isAuthenticated
+                    button.btn.btn-primary(onclick="return false;")
+                        .fa.fa-github
+                            |  Welcome #{user}!
+
+                else
+                    button.btn.btn-success(type='submit')
+                        span.fa.fa-github  Sign In

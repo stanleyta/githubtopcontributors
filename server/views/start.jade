@@ -1,0 +1,62 @@
+extends shared/layout
+block head
+    title= title
+    style.
+        body {
+            padding-top: 80px;
+        }
+
+        .gridStyle {
+            text-align: center;
+            border: 1px solid rgb(212, 212, 212);
+            width: auto height : 600 px;
+        }
+block content
+    .jumbotron.text-center
+        h1
+            | #{message}
+        p
+            | #{' ' + title}
+
+    .container.rotation(ng-app="topApp")
+        // Example row of columns
+        .row
+
+            h2
+                | Welcome to githubtopcontributors
+            p
+                | To view the top 10 contributors for a particular repository that you have access to,
+                | please type in the path of that repository in the text field
+                | and click the 'Go' button.
+
+        script(src='/controllers/topApp.js')
+
+        .row(ng-controller="githubGridCtrl")
+            br
+            //form(method='post', onsubmit='return retrieve(this);')
+            form(method='post', ng-submit='retrieve(this)')
+                | Path&nbsp;
+                input(type='text', name='url', style="width: 400px" ng-model='urlInput')
+                | &nbsp;
+                input(type='submit', value='Go').btn.btn-default
+
+            br
+            .gridStyle(ng-grid="gridOptions")
+
+        //script(type='text/javascript').
+        //    function retrieve(form) {
+        //        var xhr = $.ajax({
+        //            url: "/api/get",
+        //            type: "POST",
+        //            data: $(form).serialize(),
+        //            success: function(data, textStatus, jqXHR) {
+        //                window.alert(JSON.stringify(data));
+        //            },
+        //            error: function(jqXHR, textStatus, errorThrown) {
+        //                window.alert("Error: " + jqXHR.responseText);
+        //            },
+        //            complete: function(jqXHR, textStatus) {
+        //            }
+        //        });
+        //        return false;
+        //    };

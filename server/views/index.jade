@@ -1,0 +1,27 @@
+extends shared/layout
+
+block head
+    title= title
+    style.
+        body { padding-top: 80px; }
+
+block content
+    .jumbotron.text-center
+        h1
+            span Main
+
+        p #{' ' + title}
+        //#{message}
+
+    .container.rotation
+        // Example row of columns
+        .row
+            h2(style="text-align:center;")
+                | Please sign in with Github
+            p(style="text-align:center;")
+                | Before using our application, please
+                a(href='/login')  sign in
+                |  first.
+
+        br
+        br

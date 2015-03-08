@@ -8,18 +8,13 @@ var should = require('should');
 var express = require('express');
 app = express();
 
-var mod = require("../lib/mod.js");
+var mod = require("../server/routes/mod_route.js");
 app.use('/api/get', mod.get);
 
-//app = {};
-require('../server/js/logger'); //app.logger.info
+app = {};
+app.logger = require('../server/js/logger');
 (function() { //silence logger
-    app.logger = {};
-    app.logger.debug = function(){};
-    app.logger.info = function(){};
-    app.logger.warn = function(){};
-    app.logger.error = function(){};
-    app.logger.fatal= function(){};
+    app.logger.debug = app.logger.info = app.logger.warn = app.logger.error = app.logger.fatal= function(){};
 }());
 
 var mockObj = 42;
@@ -27,7 +22,7 @@ var mockObj = 42;
 beforeEach(function(done){
     nock.cleanAll();
     done();
-})
+});
 
 describe('module', function(){
     describe('get request', function(){
@@ -57,10 +52,10 @@ describe('module', function(){
             app.logger.info("output from mockObj: " + JSON.stringify(mockObj));
 
             response.on('end', function () {
-                //app.logger.info("mock end!");
-                //app.logger.info("full response: " + JSON.stringify(response));
-                //app.logger.info("full response headers: " + JSON.stringify(response._getHeaders()));
-                //app.logger.info("output from _getData: " + (response._getData());
+                app.logger.info("mock end!");
+                app.logger.info("full response: " + JSON.stringify(response));
+                app.logger.info("full response headers: " + JSON.stringify(response._getHeaders()));
+                app.logger.info("output from _getData: " + JSON.stringify(response._getData()));
                 assert.equal(200, response.statusCode);
                 assert.equal(response._getHeaders()["Content-Type"], "application/json");
                 response._getData().should.eql(mockObj.toString());

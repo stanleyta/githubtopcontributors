@@ -47,14 +47,13 @@ app.use(function(req,res,next){
 app.use('/', require('./routes/index_routes'));
 require('./routes/passport_routes')();
 require('./js/passport_integration')();
-require('./js/logger'); //app.logger.info
+app.logger = require('./js/logger'); //app.logger.info
 
 //all other routes that require authentication
 app.use('/api', require('./js/require_authentication'));
 
 //API
-var mod = require('../lib/mod.js');
+var mod = require('./routes/mod_route.js');
 app.use('/api/get', mod.get);
-
 
 module.exports = app;

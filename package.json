@@ -1,7 +1,7 @@
 {
   "name": "githubtopcontributors",
-  "version": "0.1.0",
-  "description": "node.js module to query the GitHub API and get the \"top 10\" contributors",
+  "version": "0.1.1",
+  "description": "node.js site to query the GitHub API using the githubtopcontributors_module module and display the \"top 10\" contributors",
   "main": "server.js",
   "scripts": {
     "test": "mocha"

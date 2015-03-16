@@ -1,6 +1,6 @@
 # githubtopcontributors
----
-
+ ![alt tag](https://travis-ci.org/stanleyta/githubtopcontributors.svg?branch=master)
+ 
 githubtopcontributors is a site built in node.js which utilizes the [githubtopcontributors_module](https://github.com/stanleyta/githubtopcontributors_module) to query the GitHub API to retrieve the "top 10" contributors. The site provides an interface where the results are displayed using ngGrid / angularUI.
 
 Installation
